@@ -1,9 +1,21 @@
-import { Text, View, StyleSheet } from "react-native";
+import { RecipeCard } from "@/components/recipe-card";
+import { useRecipes } from "@/hooks/use-recipes";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 
-export default function Index() {
+export default function HomeScreen() {
+  const { recipes } = useRecipes();
+
   return (
     <View style={styles.container}>
-      <Text>Edit src/app/index.tsx to edit this screen.</Text>
+      <Text style={styles.heading}>Cookly 🍽️</Text>
+
+      <FlatList
+        data={recipes}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <RecipeCard recipe={item} />
+        )}
+      />
     </View>
   );
 }
@@ -11,7 +23,12 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    padding: 16,
+    backgroundColor: "#F5F5F5",
+  },
+  heading: {
+    fontSize: 26,
+    fontWeight: "bold",
+    marginBottom: 20,
   },
 });
