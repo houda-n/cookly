@@ -1,4 +1,5 @@
 import {
+  Button,
   FlatList,
   StyleSheet,
   Text,
@@ -12,7 +13,8 @@ import { useRecipeFilters } from "@/hooks/use-recipe-filters";
 import { useRecipes } from "@/hooks/use-recipes";
 
 export default function HomeScreen() {
-  const { recipes } = useRecipes();
+  const { state, reload } = useRecipes();
+  const recipes = state.status === "success" ? state.data : [];
   const {
     query,
     setQuery,
@@ -24,6 +26,23 @@ export default function HomeScreen() {
   const { width } = useWindowDimensions();
 
   const columns = width >= 768 ? 3 : 1;
+
+  if (state.status === "loading") {
+    return (
+      <View style={styles.container}>
+        <Text>Chargement des recettes…</Text>
+      </View>
+    );
+  }
+
+  if (state.status === "error") {
+    return (
+      <View style={styles.container}>
+        <Text accessibilityRole="alert">{state.message}</Text>
+        <Button title="Réessayer" onPress={reload} />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
